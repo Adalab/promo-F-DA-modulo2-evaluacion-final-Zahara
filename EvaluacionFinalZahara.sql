@@ -171,14 +171,14 @@
  
  # 22. Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
 
-SELECT title
-	FROM film
-WHERE film.film_id IN (  -- pongo de dónde es el id porque me estoy liando con film_id de inventory
-    SELECT  inventory.film_id  --  no era necesario el distinct 
-    FROM rental
-    JOIN inventory ON rental.inventory_id = inventory.inventory_id
-    WHERE rental.return_date - rental.rental_date > 5 
-);
+	SELECT title
+		FROM film
+	WHERE film.film_id IN (  -- pongo de dónde es el id porque me estoy liando con film_id de inventory
+		SELECT  inventory.film_id  --  no era necesario el distinct 
+		FROM rental
+		JOIN inventory ON rental.inventory_id = inventory.inventory_id
+		WHERE rental.return_date - rental.rental_date > 5 
+	 );
 
  -- no era necesario lo de abajo, pero lo dejo para saber de dónde salió la idea de restar las fechas
 # https://es.stackoverflow.com/questions/255292/d%C3%ADas-de-diferencia-entre-dos-fecha-sql-server-2012#:~:text=Puedes%20utilizar%20la%20funci%C3%B3n%20DateDiff,%2C%20horas%2C%20minutos%2C%20etc.
@@ -197,12 +197,12 @@ WHERE film.film_id IN (  -- pongo de dónde es el id porque me estoy liando con 
 	SELECT CONCAT(first_name, " ", last_name) AS `nombres_actores_nunca_horror`
 			FROM actor
 	WHERE actor.actor_id NOT IN (
-    SELECT film_actor.actor_id  -- por nombre y apellido no deja
-		FROM film_actor
-    JOIN film_category ON film_actor.film_id = film_category.film_id
-    JOIN category ON film_category.category_id = category.category_id
-    WHERE category.name = "Horror"
-);
+			SELECT film_actor.actor_id  -- por nombre y apellido no deja
+				FROM film_actor
+			JOIN film_category ON film_actor.film_id = film_category.film_id
+			JOIN category ON film_category.category_id = category.category_id
+			WHERE category.name = "Horror"
+	);
  
  # 24. BONUS: Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film.
  
